@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SamaraAgenda - Gestão para Psicopedagogos</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6f9bce">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: #2d2d2d;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            padding: 20px 0;
+            background: linear-gradient(135deg, #93b4d7 0%, #6f9bce 50%, #4a7bb3 100%);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(147, 180, 215, 0.3);
+            border-bottom: 3px solid white;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: white;
+            letter-spacing: -0.5px;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: white;
+            font-weight: 400;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            padding: 8px 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav a:hover {
+            border-bottom-color: white;
+        }
+
+        .nav a:last-child {
+            background: white;
+            color: #6f9bce;
+            padding: 8px 20px;
+            border-radius: 0;
+            font-weight: 500;
+            border-bottom: none;
+        }
+
+        .nav a:last-child:hover {
+            background: rgba(255,255,255,0.9);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .hero {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #93b4d7 0%, #6f9bce 50%, #4a7bb3 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            top: 30px;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            pointer-events: none;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 0 L100 100 L0 100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-size: cover;
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 25px;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .btn-hero-primary {
+            background: white;
+            color: #4a7bb3;
+            padding: 15px 40px;
+            border-radius: 0;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn-hero-primary:hover {
+            background: #f0f0f0;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .btn-hero-secondary {
+            background: transparent;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 0;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: 2px solid white;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn-hero-secondary:hover {
+            background: white;
+            color: #4a7bb3;
+        }
+
+        .cards-section {
+            padding: 80px 0;
+            background: #f8fafd;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #2d2d2d;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section-title .title-decoration {
+            width: 80px;
+            height: 3px;
+            background: #93b4d7;
+            margin: 20px auto 0;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 30px rgba(147, 180, 215, 0.1);
+            border: 1px solid rgba(147, 180, 215, 0.2);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(147, 180, 215, 0.2);
+            border-color: #6f9bce;
+        }
+
+        .card-icon {
+            width: 90px;
+            height: 90px;
+            background: rgba(147, 180, 215, 0.1);
+            border-radius: 0%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            color: #6f9bce;
+            font-size: 2.5rem;
+            transition: all 0.3s;
+        }
+
+        .card:hover .card-icon {
+            background: #6f9bce;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .card h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #2d2d2d;
+        }
+
+        .card p {
+            color: #655;
+            margin-bottom: 25px;
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: #6f9bce;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .card-link:hover {
+            gap: 12px;
+            color: #6f9bce;
+        }
+
+        .features {
+            padding: 80px 0;
+            background: #e8f0f9;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-item {
+            text-align: center;
+            background: white;
+            padding: 30px 20px;
+            border-radius: 0px;
+            box-shadow: 0 5px 20px rgba(147, 180, 215, 0.1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: #6f9bce;
+            border-radius: 0%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 10px 20px rgba(147, 180, 215, 0.3);
+        }
+
+        .feature-item h5 {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2d2d2d;
+            font-size: 1.2rem;
+        }
+
+        .feature-item p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .why-choose {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .why-item {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            background: #f8fafd;
+            padding: 30px;
+            border-radius: 0px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .why-item:hover {
+            border-color: #93b4d7;
+            box-shadow: 0 10px 30px rgba(147, 180, 215, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .why-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #93b4d7;
+            line-height: 1;
+            opacity: 0.5;
+        }
+
+        .why-content h5 {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2d2d2d;
+        }
+
+        .why-content p {
+            color: #655;
+            font-size: 0.95rem;
+        }
+
+        .cta-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #93b4d7 0%, #6f9bce 50%, #4a7bb3 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .btn-cta {
+            background: white;
+            color: #4a7bb3;
+            padding: 15px 50px;
+            border-radius: 0;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            display: inline-block;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn-cta:hover {
+            background: #f0f0f0;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .footer {
+            padding: 50px 0;
+            background: #1a2b3c;
+            color: white;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #93b4d7;
+            margin-bottom: 20px;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .footer-social a {
+            color: white;
+            font-size: 1.5rem;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+
+        .footer-social a:hover {
+            opacity: 1;
+            color: #93b4d7;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-content h3 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>SamaraAgenda</h1>
+                    <p>Gestão para Psicopedagogos</p>
+                </div>
+                <nav class="nav">
+                    <a href="#inicio">Início</a>
+                    <a href="#recursos">Recursos</a>
+                    <a href="#sobre">Sobre</a>
+                    <a href="#contato">Contato</a>
+                    <a href="login.html">Acessar Sistema</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero" id="inicio">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Sistema Completo para Gestão de Consultas Psicopedagógicas</h2>
+                <p>Organize seus agendamentos, registros de sessões e acompanhamento de pacientes com a sofisticação que seu trabalho merece.</p>
+                <div class="hero-buttons">
+                    <a href="login.html" class="btn-hero-primary">Começar Agora</a>
+                    <a href="#recursos" class="btn-hero-secondary">Conhecer Recursos</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cards-section" id="recursos">
+        <div class="container">
+            <div class="section-title">
+                <h3>Como podemos ajudar?</h3>
+                <p>Ferramentas pensadas para otimizar seu trabalho e oferecer o melhor acompanhamento</p>
+                <div class="title-decoration"></div>
+            </div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <h4>Agendamento de Consultas</h4>
+                    <p>Gerencie sua agenda de forma intuitiva, com verificação automática de conflitos e lembretes para seus pacientes.</p>
+                    <a href="login.html" class="card-link">
+                        Acessar Agenda <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="bi bi-file-text"></i>
+                    </div>
+                    <h4>Registro Digital de Sessões</h4>
+                    <p>Registre objetivos, atividades realizadas e observações de cada sessão. Grave áudios e mantenha um histórico completo.</p>
+                    <a href="login.html" class="card-link">
+                        Ver Registros <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h4>Gestão de Pacientes</h4>
+                    <p>Cadastre e gerencie informações de seus pacientes, acompanhe histórico de consultas e evolução do tratamento.</p>
+                    <a href="login.html" class="card-link">
+                        Gerenciar Pacientes <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h3>Recursos Exclusivos</h3>
+                <p>Tudo que você precisa para uma gestão completa e eficiente</p>
+                <div class="title-decoration"></div>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-clock"></i>
+                    </div>
+                    <h5>Lembretes Automáticos</h5>
+                    <p>Envio de notificações por email para pacientes sobre consultas agendadas</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-mic"></i>
+                    </div>
+                    <h5>Gravação de Áudio</h5>
+                    <p>Registre as sessões com áudio diretamente no sistema, com total segurança</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-calendar-week"></i>
+                    </div>
+                    <h5>Verificação de Conflitos</h5>
+                    <p>Sistema impede agendamentos duplicados no mesmo horário automaticamente</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                    <h5>Dashboard Analítico</h5>
+                    <p>Visualize estatísticas e métricas do seu consultório em tempo real</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-shield"></i>
+                    </div>
+                    <h5>Segurança Total</h5>
+                    <p>Dados protegidos com autenticação e níveis de acesso diferenciados</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-phone"></i>
+                    </div>
+                    <h5>Acesso Mobile</h5>
+                    <p>Sistema responsivo, acessível de qualquer dispositivo, a qualquer hora</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="why-choose" id="sobre">
+        <div class="container">
+            <div class="section-title">
+                <h3>Por que escolher nosso sistema?</h3>
+                <p>Desenvolvido especialmente para psicopedagogos, com foco na sua rotina</p>
+                <div class="title-decoration"></div>
+            </div>
+            
+            <div class="why-grid">
+                <div class="why-item">
+                    <div class="why-number">01</div>
+                    <div class="why-content">
+                        <h5>Organização Perfeita</h5>
+                        <p>Mantenha todos os registros de sessões e informações de pacientes organizados e sempre acessíveis.</p>
+                    </div>
+                </div>
+                
+                <div class="why-item">
+                    <div class="why-number">02</div>
+                    <div class="why-content">
+                        <h5>Acompanhamento Detalhado</h5>
+                        <p>Registre a evolução de cada paciente com anotações detalhadas e gravações de áudio.</p>
+                    </div>
+                </div>
+                
+                <div class="why-item">
+                    <div class="why-number">03</div>
+                    <div class="why-content">
+                        <h5>Economia de Tempo</h5>
+                        <p>Automatize lembretes e evite conflitos de agenda, dedicando mais tempo ao que realmente importa.</p>
+                    </div>
+                </div>
+                
+                <div class="why-item">
+                    <div class="why-number">04</div>
+                    <div class="why-content">
+                        <h5>Segurança dos Dados</h5>
+                        <p>Informações confidenciais protegidas com backup e controle de acesso rigoroso.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h3>Pronto para transformar sua prática?</h3>
+                <p>Comece hoje mesmo a organizar suas consultas de forma profissional e elegante.</p>
+                <a href="login.html" class="btn-cta">Acessar Sistema</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" id="contato">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">SamaraAgenda</div>
+                <p>Sistema de Gestão para Psicopedagogos</p>
+                <div class="footer-social">
+                    <a href="#"><i class="bi bi-instagram"></i></a>
+                    <a href="#"><i class="bi bi-facebook"></i></a>
+                    <a href="#"><i class="bi bi-linkedin"></i></a>
+                    <a href="#"><i class="bi bi-whatsapp"></i></a>
+                </div>
+                <p style="margin-top: 30px; opacity: 0.6; font-size: 0.85rem;">© 2026 SamaraAgenda. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registrado com sucesso');
+                    })
+                    .catch(error => {
+                        console.log('Erro ao registrar ServiceWorker:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

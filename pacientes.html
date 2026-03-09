@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="SamaraAgenda">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4a7bb3">
+    <title>Pacientes - SamaraAgenda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafd;
+            color: #2d2d2d;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.05);
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 24px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sidebar-header h2 {
+            font-family: 'Playfair Display', serif;
+            color: #4a7bb3;
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .user-info {
+            padding: 16px 20px;
+            background: #f8fafd;
+            margin: 16px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .user-info:hover {
+            background: #f0f4fa;
+        }
+
+        .user-details h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #2d2d2d;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-details span {
+            font-size: 0.8rem;
+            color: #666;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0 16px;
+        }
+
+        .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-link i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .nav-link:hover {
+            background: #f8fafd;
+            color: #4a7bb3;
+        }
+
+        .nav-link.active {
+            background: #4a7bb3;
+            color: white;
+        }
+
+        .nav-link span {
+            white-space: nowrap;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .top-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+            background: white;
+            padding: 16px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        @media (min-width: 640px) {
+            .top-bar {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px 30px;
+            }
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #2d2d2d;
+            line-height: 1.2;
+        }
+
+        @media (min-width: 640px) {
+            .page-title h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .page-title p {
+            color: #666;
+            margin-top: 4px;
+            font-size: 0.9rem;
+        }
+
+        .date-display {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #4a7bb3;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(74, 123, 179, 0.3);
+            z-index: 1001;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:active {
+            transform: scale(0.95);
+        }
+
+        .actions-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        @media (min-width: 640px) {
+            .actions-bar {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 0 12px;
+            width: 100%;
+        }
+
+        @media (min-width: 640px) {
+            .search-box {
+                min-width: 300px;
+                width: auto;
+            }
+        }
+
+        .search-box i {
+            color: #999;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            background: transparent;
+        }
+
+        .search-box input:focus {
+            outline: none;
+        }
+
+        .btn-primary {
+            background: #4a7bb3;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        @media (min-width: 640px) {
+            .btn-primary {
+                width: auto;
+                padding: 12px 25px;
+            }
+        }
+
+        .btn-primary:active {
+            background: #6f9bce;
+            transform: scale(0.98);
+        }
+
+        .pacientes-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 480px) {
+            .pacientes-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        .paciente-card {
+            background: white;
+            padding: 20px;
+            border: 1px solid #eee;
+            transition: all 0.3s;
+        }
+
+        .paciente-card:active {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(74, 123, 179, 0.1);
+            border-color: #4a7bb3;
+        }
+
+        .paciente-header {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        @media (min-width: 380px) {
+            .paciente-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
+            }
+        }
+
+        .paciente-nome {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #2d2d2d;
+            word-break: break-word;
+        }
+
+        .paciente-idade {
+            color: #666;
+            font-size: 0.85rem;
+            background: #f0f4fa;
+            padding: 4px 10px;
+            white-space: nowrap;
+            align-self: flex-start;
+        }
+
+        .paciente-info {
+            margin: 12px 0;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .info-item i {
+            color: #4a7bb3;
+            width: 20px;
+        }
+
+        .paciente-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
+        }
+
+        @media (min-width: 380px) {
+            .paciente-footer {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .ultima-sessao {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .btn-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #eee;
+            background: white;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .btn-icon:active {
+            background: #4a7bb3;
+            color: white;
+            border-color: #4a7bb3;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 0;
+        }
+
+        @media (min-width: 640px) {
+            .modal {
+                align-items: center;
+                padding: 20px;
+            }
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            position: relative;
+            animation: slideUp 0.3s ease;
+            border-radius: 16px 16px 0 0;
+        }
+
+        @media (min-width: 640px) {
+            .modal-content {
+                max-width: 700px;
+                padding: 40px;
+                animation: modalSlideIn 0.3s ease;
+                border-radius: 0;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            padding-right: 40px;
+        }
+
+        .modal-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #2d2d2d;
+            margin-bottom: 8px;
+        }
+
+        @media (min-width: 640px) {
+            .modal-header h2 {
+                font-size: 2rem;
+            }
+        }
+
+        .modal-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.3s;
+            background: #f8fafd;
+        }
+
+        .close-modal:active {
+            color: #4a7bb3;
+            background: #f0f4fa;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .form-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #2d2d2d;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            border-radius: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4a7bb3;
+            box-shadow: 0 0 0 3px rgba(74, 123, 179, 0.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 2px solid #f0f4fa;
+        }
+
+        @media (min-width: 480px) {
+            .modal-actions {
+                flex-direction: row;
+            }
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #4a7bb3;
+            border: 2px solid #4a7bb3;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        @media (min-width: 480px) {
+            .btn-secondary {
+                width: auto;
+                padding: 12px 25px;
+            }
+        }
+
+        .btn-secondary:active {
+            background: #4a7bb3;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        @media (min-width: 480px) {
+            .btn-danger {
+                width: auto;
+                padding: 12px 25px;
+            }
+        }
+
+        .btn-danger:active {
+            background: #c0392b;
+            transform: scale(0.98);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        @media (min-width: 480px) {
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+        }
+
+        .info-block {
+            background: #f8fafd;
+            padding: 12px;
+            border: 1px solid #eee;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-weight: 500;
+            color: #2d2d2d;
+            word-break: break-word;
+        }
+
+        .info-value.small {
+            font-size: 0.9rem;
+        }
+
+        .observacoes-box {
+            background: #f8fafd;
+            padding: 16px;
+            border-left: 4px solid #4a7bb3;
+            margin: 20px 0;
+        }
+
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top-color: #4a7bb3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            background: white;
+            border: 1px solid #eee;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-color: #28a745;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #dc3545;
+        }
+
+        @media (max-width: 1023px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 2px 0 30px rgba(0,0,0,0.2);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .btn,
+            .nav-link,
+            .paciente-card,
+            .btn-icon {
+                cursor: default;
+            }
+            
+            input, select, textarea {
+                font-size: 16px !important;
+            }
+        }
+
+        @media (orientation: landscape) and (max-height: 600px) {
+            .sidebar {
+                padding: 16px 0;
+            }
+            
+            .user-info {
+                padding: 12px 20px;
+            }
+            
+            .nav-link {
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>SamaraAgenda</h2>
+                <p>Sistema de Gestão</p>
+            </div>
+            
+            <div class="user-info" onclick="window.location.href='perfil.html'">
+                <div class="user-details">
+                    <h4 id="sidebarNome">Carregando...</h4>
+                    <span id="sidebarEmail">carregando...</span>
+                </div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link" id="link-dashboard">
+                        <i class="bi bi-house-door"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pacientes.html" class="nav-link active" id="link-pacientes">
+                        <i class="bi bi-people"></i>
+                        <span>Pacientes</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="agendamento.html" class="nav-link" id="link-agenda">
+                        <i class="bi bi-calendar-check"></i>
+                        <span>Agenda</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="registro-sessao.html" class="nav-link" id="link-registro">
+                        <i class="bi bi-file-text"></i>
+                        <span>Registro de Sessões</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="lembrete.html" class="nav-link" id="link-lembrete">
+                        <i class="bi bi-bell"></i>
+                        <span>Lembretes</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="perfil.html" class="nav-link" id="link-perfil">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>Pacientes</h1>
+                    <p>Gerencie seus pacientes e suas informações</p>
+                </div>
+                <div class="date-display" id="currentDate"></div>
+            </div>
+            
+            <div class="alert" id="alertMessage"></div>
+            
+            <div class="actions-bar">
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="searchPaciente" placeholder="Buscar paciente..." onkeyup="filtrarPacientes()">
+                </div>
+                <button class="btn-primary" onclick="abrirModalCadastro()">
+                    <i class="bi bi-plus-lg"></i> Novo Paciente
+                </button>
+            </div>
+            
+            <div class="pacientes-grid" id="pacientesGrid"></div>
+        </main>
+    </div>
+    
+    <button class="mobile-menu-btn" id="menuBtn" aria-label="Abrir menu">
+        <i class="bi bi-list"></i>
+    </button>
+    
+    <div class="modal" id="modalCadastro">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModal('modalCadastro')">&times;</span>
+            <div class="modal-header">
+                <h2>Novo Paciente</h2>
+                <p>Preencha as informações do paciente</p>
+            </div>
+            
+            <form id="formPaciente" onsubmit="salvarPaciente(event)">
+                <div class="form-group">
+                    <label>Nome Completo *</label>
+                    <input type="text" id="nome" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Data de Nascimento</label>
+                        <input type="date" id="dataNascimento">
+                    </div>
+                    <div class="form-group">
+                        <label>Gênero</label>
+                        <select id="genero">
+                            <option value="">Selecione</option>
+                            <option value="Feminino">Feminino</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input type="tel" id="telefone" placeholder="(11) 99999-9999">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
+                        <input type="email" id="email" placeholder="paciente@email.com">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Responsável (se menor de idade)</label>
+                    <input type="text" id="responsavel" placeholder="Nome do responsável">
+                </div>
+                
+                <div class="form-group">
+                    <label>Observações Iniciais</label>
+                    <textarea id="observacoes" rows="3" placeholder="Informações relevantes sobre o paciente..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="fecharModal('modalCadastro')">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar Paciente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal" id="modalVisualizar">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModal('modalVisualizar')">&times;</span>
+            <div class="modal-header">
+                <h2 id="viewNome">Detalhes do Paciente</h2>
+                <p id="viewInfo">Informações detalhadas do paciente</p>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-block">
+                    <div class="info-label">Data de Nascimento</div>
+                    <div class="info-value" id="viewDataNasc">Não informada</div>
+                </div>
+                <div class="info-block">
+                    <div class="info-label">Idade</div>
+                    <div class="info-value" id="viewIdade">-</div>
+                </div>
+                <div class="info-block">
+                    <div class="info-label">Gênero</div>
+                    <div class="info-value" id="viewGenero">Não informado</div>
+                </div>
+                <div class="info-block">
+                    <div class="info-label">Responsável</div>
+                    <div class="info-value" id="viewResponsavel">Não informado</div>
+                </div>
+                <div class="info-block">
+                    <div class="info-label">Telefone</div>
+                    <div class="info-value" id="viewTelefone">Não informado</div>
+                </div>
+                <div class="info-block">
+                    <div class="info-label">E-mail</div>
+                    <div class="info-value small" id="viewEmail">Não informado</div>
+                </div>
+            </div>
+            
+            <div class="observacoes-box">
+                <div class="info-label">Observações</div>
+                <div class="info-value" id="viewObservacoes">Sem observações</div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-primary" onclick="editarDoVisualizar()">
+                    <i class="bi bi-pencil"></i> Editar
+                </button>
+                <button class="btn-secondary" onclick="agendarDoVisualizar()">
+                    <i class="bi bi-calendar-plus"></i> Agendar
+                </button>
+                <button class="btn-danger" onclick="confirmarExclusao()">
+                    <i class="bi bi-trash"></i> Excluir
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="modalEditar">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModal('modalEditar')">&times;</span>
+            <div class="modal-header">
+                <h2>Editar Paciente</h2>
+                <p>Atualize as informações do paciente</p>
+            </div>
+            
+            <form id="formEditarPaciente" onsubmit="atualizarPaciente(event)">
+                <input type="hidden" id="editId">
+                
+                <div class="form-group">
+                    <label>Nome Completo *</label>
+                    <input type="text" id="editNome" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Data de Nascimento</label>
+                        <input type="date" id="editDataNascimento">
+                    </div>
+                    <div class="form-group">
+                        <label>Gênero</label>
+                        <select id="editGenero">
+                            <option value="">Selecione</option>
+                            <option value="Feminino">Feminino</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input type="tel" id="editTelefone" placeholder="(11) 99999-9999">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
+                        <input type="email" id="editEmail" placeholder="paciente@email.com">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Responsável (se menor de idade)</label>
+                    <input type="text" id="editResponsavel" placeholder="Nome do responsável">
+                </div>
+                
+                <div class="form-group">
+                    <label>Observações</label>
+                    <textarea id="editObservacoes" rows="3" placeholder="Informações relevantes sobre o paciente..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="fecharModal('modalEditar')">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal" id="modalExcluir">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModal('modalExcluir')">&times;</span>
+            <div class="modal-header">
+                <h2>Confirmar Exclusão</h2>
+                <p>Esta ação não pode ser desfeita</p>
+            </div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <i class="bi bi-exclamation-triangle" style="font-size: 3rem; color: #dc3545;"></i>
+                <p style="margin-top: 16px; color: #666;">
+                    Tem certeza que deseja excluir o paciente <strong id="excluirNome">este paciente</strong>?
+                </p>
+                <p style="color: #999; font-size: 0.85rem;">
+                    Todas as consultas e registros associados também serão removidos.
+                </p>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="fecharModal('modalExcluir')">Cancelar</button>
+                <button class="btn-danger" onclick="excluirPaciente()">Sim, Excluir</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+    
+    <script>
+        let usuarioAtual = null;
+        let pacientes = [];
+        
+        window.onload = async function() {
+            if (!verificarLogin()) return;
+            await carregarDadosUsuario();
+            atualizarData();
+            await carregarPacientes();
+            setupMobileMenu();
+            setupModalGestures();
+        };
+
+        function setupMobileMenu() {
+            const menuBtn = document.getElementById('menuBtn');
+            const sidebar = document.getElementById('sidebar');
+            
+            menuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.toggle('open');
+                this.innerHTML = sidebar.classList.contains('open') ? 
+                    '<i class="bi bi-x-lg"></i>' : '<i class="bi bi-list"></i>';
+            });
+            
+            document.addEventListener('click', function(event) {
+                if (sidebar.classList.contains('open') && 
+                    !sidebar.contains(event.target) && 
+                    !menuBtn.contains(event.target)) {
+                    sidebar.classList.remove('open');
+                    menuBtn.innerHTML = '<i class="bi bi-list"></i>';
+                }
+            });
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 1023) {
+                        sidebar.classList.remove('open');
+                        menuBtn.innerHTML = '<i class="bi bi-list"></i>';
+                    }
+                });
+            });
+        }
+
+        function setupModalGestures() {
+            if (window.innerWidth <= 639) {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    let startY = 0;
+                    
+                    modal.addEventListener('touchstart', (e) => {
+                        startY = e.touches[0].clientY;
+                    }, { passive: true });
+                    
+                    modal.addEventListener('touchmove', (e) => {
+                        if (!modal.classList.contains('active')) return;
+                        
+                        const currentY = e.touches[0].clientY;
+                        const diffY = currentY - startY;
+                        
+                        if (diffY > 50) {
+                            modal.classList.remove('active');
+                        }
+                    }, { passive: true });
+                });
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loading').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('active');
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.textContent = message;
+            alertDiv.className = 'alert show alert-' + type;
+            
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+            }, 3000);
+        }
+        
+        function verificarLogin() {
+            const usuario = sessionStorage.getItem('usuario');
+            if (!usuario) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            usuarioAtual = JSON.parse(usuario);
+            return true;
+        }
+
+        async function carregarDadosUsuario() {
+            try {
+                const response = await fetch(`/api/perfil/${usuarioAtual.id}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    usuarioAtual = data;
+                    sessionStorage.setItem('usuario', JSON.stringify(data));
+                    atualizarSidebar();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados do usuário:', error);
+            }
+        }
+
+        function atualizarSidebar() {
+            document.getElementById('sidebarNome').textContent = usuarioAtual.nome;
+            document.getElementById('sidebarEmail').textContent = usuarioAtual.email;
+        }
+        
+        function atualizarData() {
+            const data = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = data.toLocaleDateString('pt-BR', options);
+        }
+        
+        async function carregarPacientes() {
+            showLoading();
+            
+            try {
+                const response = await fetch(`/api/pacientes?usuario_id=${usuarioAtual.id}`);
+                pacientes = await response.json();
+                renderizarPacientes();
+            } catch (error) {
+                console.error('Erro ao carregar pacientes:', error);
+                showAlert('Erro ao carregar pacientes', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        function renderizarPacientes(lista = pacientes) {
+            const grid = document.getElementById('pacientesGrid');
+            
+            if (lista.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-people"></i>
+                        <h3>Nenhum paciente cadastrado</h3>
+                        <p>Clique em "Novo Paciente" para começar a cadastrar.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = '';
+            
+            lista.forEach(paciente => {
+                const idade = paciente.data_nascimento ? calcularIdade(paciente.data_nascimento) : 'N/I';
+                const ultimaSessao = paciente.ultima_consulta ? 
+                    new Date(paciente.ultima_consulta).toLocaleDateString('pt-BR') : 
+                    'Nenhuma';
+                
+                const card = document.createElement('div');
+                card.className = 'paciente-card';
+                card.innerHTML = `
+                    <div class="paciente-header">
+                        <div class="paciente-nome">${paciente.nome}</div>
+                        <div class="paciente-idade">${idade} anos</div>
+                    </div>
+                    <div class="paciente-info">
+                        <div class="info-item">
+                            <i class="bi bi-telephone"></i>
+                            <span>${paciente.telefone || 'Não informado'}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="bi bi-envelope"></i>
+                            <span>${paciente.email || 'Não informado'}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="bi bi-person-badge"></i>
+                            <span>Resp: ${paciente.responsavel || 'Não informado'}</span>
+                        </div>
+                    </div>
+                    <div class="paciente-footer">
+                        <div class="ultima-sessao">
+                            <i class="bi bi-calendar"></i> Última: ${ultimaSessao}
+                        </div>
+                        <div class="btn-actions">
+                            <button class="btn-icon" onclick="visualizarPaciente('${paciente.id}')" title="Ver detalhes">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button class="btn-icon" onclick="editarPaciente('${paciente.id}')" title="Editar">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn-icon" onclick="agendarConsulta('${paciente.id}', '${paciente.nome}')" title="Agendar consulta">
+                                <i class="bi bi-calendar-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        function calcularIdade(dataNascimento) {
+            const hoje = new Date();
+            const nasc = new Date(dataNascimento);
+            let idade = hoje.getFullYear() - nasc.getFullYear();
+            const mes = hoje.getMonth() - nasc.getMonth();
+            
+            if (mes < 0 || (mes === 0 && hoje.getDate() < nasc.getDate())) {
+                idade--;
+            }
+            return idade;
+        }
+        
+        function filtrarPacientes() {
+            const termo = document.getElementById('searchPaciente').value.toLowerCase();
+            const filtrados = pacientes.filter(p => 
+                p.nome.toLowerCase().includes(termo) || 
+                (p.email && p.email.toLowerCase().includes(termo)) ||
+                (p.responsavel && p.responsavel.toLowerCase().includes(termo))
+            );
+            renderizarPacientes(filtrados);
+        }
+        
+        function abrirModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+        
+        function fecharModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+        
+        function abrirModalCadastro() {
+            document.getElementById('formPaciente').reset();
+            abrirModal('modalCadastro');
+        }
+        
+        async function salvarPaciente(event) {
+            event.preventDefault();
+            
+            const dataNasc = document.getElementById('dataNascimento').value;
+            
+            const novoPaciente = {
+                usuario_id: usuarioAtual.id,
+                nome: document.getElementById('nome').value,
+                data_nascimento: dataNasc || null,
+                genero: document.getElementById('genero').value || '',
+                telefone: document.getElementById('telefone').value || '',
+                email: document.getElementById('email').value || '',
+                responsavel: document.getElementById('responsavel').value || '',
+                observacoes: document.getElementById('observacoes').value || ''
+            };
+            
+            showLoading();
+            
+            try {
+                const response = await fetch('/api/pacientes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(novoPaciente)
+                });
+                
+                if (response.ok) {
+                    fecharModal('modalCadastro');
+                    await carregarPacientes();
+                    showAlert('Paciente cadastrado com sucesso!', 'success');
+                } else {
+                    const error = await response.json();
+                    showAlert(error.message || 'Erro ao cadastrar paciente', 'error');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showAlert('Erro ao conectar com o servidor', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        async function visualizarPaciente(id) {
+            showLoading();
+            
+            try {
+                const response = await fetch(`/api/pacientes/${id}`);
+                const paciente = await response.json();
+                
+                document.getElementById('viewNome').textContent = paciente.nome;
+                document.getElementById('viewDataNasc').textContent = paciente.data_nascimento ? 
+                    new Date(paciente.data_nascimento).toLocaleDateString('pt-BR') : 
+                    'Não informada';
+                document.getElementById('viewIdade').textContent = paciente.data_nascimento ? 
+                    calcularIdade(paciente.data_nascimento) + ' anos' : 
+                    'N/I';
+                document.getElementById('viewGenero').textContent = paciente.genero || 'Não informado';
+                document.getElementById('viewResponsavel').textContent = paciente.responsavel || 'Não informado';
+                document.getElementById('viewTelefone').textContent = paciente.telefone || 'Não informado';
+                document.getElementById('viewEmail').textContent = paciente.email || 'Não informado';
+                document.getElementById('viewObservacoes').textContent = paciente.observacoes || 'Sem observações';
+                
+                document.getElementById('modalVisualizar').dataset.currentId = id;
+                abrirModal('modalVisualizar');
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                showAlert('Erro ao carregar detalhes do paciente', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        function editarDoVisualizar() {
+            const id = document.getElementById('modalVisualizar').dataset.currentId;
+            fecharModal('modalVisualizar');
+            editarPaciente(id);
+        }
+        
+        function agendarDoVisualizar() {
+            const id = document.getElementById('modalVisualizar').dataset.currentId;
+            const nome = document.getElementById('viewNome').textContent;
+            window.location.href = `agendamento.html?paciente=${encodeURIComponent(nome)}&paciente_id=${id}`;
+        }
+        
+        function confirmarExclusao() {
+            const id = document.getElementById('modalVisualizar').dataset.currentId;
+            const nome = document.getElementById('viewNome').textContent;
+            document.getElementById('excluirNome').textContent = nome;
+            document.getElementById('modalExcluir').dataset.currentId = id;
+            fecharModal('modalVisualizar');
+            abrirModal('modalExcluir');
+        }
+        
+        async function excluirPaciente() {
+            const id = document.getElementById('modalExcluir').dataset.currentId;
+            
+            showLoading();
+            
+            try {
+                const response = await fetch(`/api/pacientes/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    fecharModal('modalExcluir');
+                    await carregarPacientes();
+                    showAlert('Paciente excluído com sucesso!', 'success');
+                } else {
+                    showAlert('Erro ao excluir paciente', 'error');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showAlert('Erro ao conectar com o servidor', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        async function editarPaciente(id) {
+            showLoading();
+            
+            try {
+                const response = await fetch(`/api/pacientes/${id}`);
+                const paciente = await response.json();
+                
+                document.getElementById('editId').value = paciente.id;
+                document.getElementById('editNome').value = paciente.nome;
+                document.getElementById('editDataNascimento').value = paciente.data_nascimento || '';
+                document.getElementById('editGenero').value = paciente.genero || '';
+                document.getElementById('editTelefone').value = paciente.telefone || '';
+                document.getElementById('editEmail').value = paciente.email || '';
+                document.getElementById('editResponsavel').value = paciente.responsavel || '';
+                document.getElementById('editObservacoes').value = paciente.observacoes || '';
+                
+                abrirModal('modalEditar');
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                showAlert('Erro ao carregar dados do paciente', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        async function atualizarPaciente(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('editId').value;
+            
+            const pacienteAtualizado = {
+                nome: document.getElementById('editNome').value,
+                data_nascimento: document.getElementById('editDataNascimento').value || null,
+                genero: document.getElementById('editGenero').value || '',
+                telefone: document.getElementById('editTelefone').value || '',
+                email: document.getElementById('editEmail').value || '',
+                responsavel: document.getElementById('editResponsavel').value || '',
+                observacoes: document.getElementById('editObservacoes').value || ''
+            };
+            
+            showLoading();
+            
+            try {
+                const response = await fetch(`/api/pacientes/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(pacienteAtualizado)
+                });
+                
+                if (response.ok) {
+                    fecharModal('modalEditar');
+                    await carregarPacientes();
+                    showAlert('Paciente atualizado com sucesso!', 'success');
+                } else {
+                    showAlert('Erro ao atualizar paciente', 'error');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showAlert('Erro ao conectar com o servidor', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        function agendarConsulta(id, nome) {
+            window.location.href = `agendamento.html?paciente=${encodeURIComponent(nome)}&paciente_id=${id}`;
+        }
+        
+        function logout() {
+            sessionStorage.removeItem('usuario');
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        function destacarLinkAtivo() {
+            const path = window.location.pathname.split('/').pop() || 'dashboard.html';
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            if (path.includes('dashboard')) {
+                document.getElementById('link-dashboard')?.classList.add('active');
+            } else if (path.includes('pacientes')) {
+                document.getElementById('link-pacientes')?.classList.add('active');
+            } else if (path.includes('agendamento')) {
+                document.getElementById('link-agenda')?.classList.add('active');
+            } else if (path.includes('registro-sessao')) {
+                document.getElementById('link-registro')?.classList.add('active');
+            } else if (path.includes('lembrete')) {
+                document.getElementById('link-lembrete')?.classList.add('active');
+            } else if (path.includes('perfil')) {
+                document.getElementById('link-perfil')?.classList.add('active');
+            }
+        }
+
+        window.addEventListener('load', destacarLinkAtivo);
+    </script>
+</body>
+</html>

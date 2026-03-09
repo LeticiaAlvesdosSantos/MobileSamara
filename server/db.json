@@ -1,0 +1,42 @@
+{
+  "usuarios": [
+    {
+      "id": "8dfd3949-a68e-4a31-9fc3-d8673b0f3191",
+      "nome": "Usuário Teste",
+      "email": "teste@email.com",
+      "senha": "$2b$10$iaQaNvkOcN2hKWRrDUR3YuQAdOym9JDRv0Bvh52xAmI3OhAOR8MSC",
+      "telefone": "(11) 99999-9999",
+      "tipo": "psicopedagogo",
+      "createdAt": "2026-03-08T22:11:23.139Z",
+      "updatedAt": "2026-03-08T22:11:23.139Z"
+    },
+    {
+      "id": "59cda2f0-5c78-4f23-9645-5e7a600e8453",
+      "nome": "LETICIA ALVES DOS SANTOS",
+      "email": "leticia.alves.dos.santos0702@gmail.com",
+      "senha": "$2b$10$qivwlxVfQYGMAaIyknUrG.LkUY6by.b3hlp9FKTTagxkIvrI.VlTO",
+      "telefone": "(11) 96144-1434",
+      "tipo": "psicopedagogo",
+      "createdAt": "2026-03-08T22:12:11.129Z",
+      "updatedAt": "2026-03-08T22:33:00.043Z"
+    }
+  ],
+  "pacientes": [
+    {
+      "id": "06d3dbe4-c9c6-4772-ac10-9d06f63a0532",
+      "usuario_id": "59cda2f0-5c78-4f23-9645-5e7a600e8453",
+      "nome": "LETICIA ALVES DOS SANTOS",
+      "data_nascimento": "2009-02-07",
+      "genero": "Feminino",
+      "telefone": "(11) 96144-1434",
+      "email": "leticia.alves.dos.santos0702@gmail.com",
+      "responsavel": "Daniela",
+      "observacoes": "",
+      "created_at": "2026-03-08T22:20:17.897Z",
+      "updated_at": "2026-03-08T22:20:17.897Z"
+    }
+  ],
+  "consultas": [],
+  "registros": [],
+  "audios": []
+}

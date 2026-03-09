@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="SamaraAgenda">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4a7bb3">
+    <title>Meu Perfil - SamaraAgenda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafd;
+            color: #2d2d2d;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.05);
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 24px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sidebar-header h2 {
+            font-family: 'Playfair Display', serif;
+            color: #4a7bb3;
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .user-info {
+            padding: 16px 20px;
+            background: #f8fafd;
+            margin: 16px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .user-info:hover {
+            background: #f0f4fa;
+        }
+
+        .user-details h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #2d2d2d;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-details span {
+            font-size: 0.8rem;
+            color: #666;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0 16px;
+        }
+
+        .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-link i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .nav-link:hover {
+            background: #f8fafd;
+            color: #4a7bb3;
+        }
+
+        .nav-link.active {
+            background: #4a7bb3;
+            color: white;
+        }
+
+        .nav-link span {
+            white-space: nowrap;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .top-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+            background: white;
+            padding: 16px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        @media (min-width: 640px) {
+            .top-bar {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px 30px;
+            }
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #2d2d2d;
+            line-height: 1.2;
+        }
+
+        @media (min-width: 640px) {
+            .page-title h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .page-title p {
+            color: #666;
+            margin-top: 4px;
+            font-size: 0.9rem;
+        }
+
+        .date-display {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #4a7bb3;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(74, 123, 179, 0.3);
+            z-index: 1001;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:active {
+            transform: scale(0.95);
+        }
+
+        .perfil-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .perfil-card {
+            background: white;
+            padding: 24px;
+            border: 1px solid #eee;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+        }
+
+        @media (min-width: 640px) {
+            .perfil-card {
+                padding: 40px;
+            }
+        }
+
+        .perfil-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .perfil-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #2d2d2d;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+
+        @media (min-width: 640px) {
+            .perfil-header h2 {
+                font-size: 2rem;
+            }
+        }
+
+        .perfil-header p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .perfil-info {
+            margin-bottom: 30px;
+        }
+
+        .info-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f4fa;
+        }
+
+        @media (min-width: 640px) {
+            .info-row {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+
+        .info-label {
+            color: #666;
+            font-weight: 500;
+            min-width: 120px;
+        }
+
+        .info-value {
+            color: #2d2d2d;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .info-value span {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .btn-editar {
+            background: transparent;
+            border: none;
+            color: #4a7bb3;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.3s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-editar:active {
+            color: #6f9bce;
+        }
+
+        .info-value input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            font-family: 'Inter', sans-serif;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .info-value input:focus {
+            outline: none;
+            border-color: #4a7bb3;
+        }
+
+        .acoes-perfil {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .acoes-perfil {
+                flex-direction: row;
+                justify-content: flex-end;
+            }
+        }
+
+        .btn-primary {
+            background: #4a7bb3;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        @media (min-width: 480px) {
+            .btn-primary {
+                width: auto;
+                padding: 12px 25px;
+            }
+        }
+
+        .btn-primary:active {
+            background: #6f9bce;
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #4a7bb3;
+            border: 2px solid #4a7bb3;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        @media (min-width: 480px) {
+            .btn-secondary {
+                width: auto;
+                padding: 12px 25px;
+            }
+        }
+
+        .btn-secondary:active {
+            background: #4a7bb3;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        .btn-danger:active {
+            background: #c0392b;
+            transform: scale(0.98);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 0;
+        }
+
+        @media (min-width: 640px) {
+            .modal {
+                align-items: center;
+                padding: 20px;
+            }
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            position: relative;
+            animation: slideUp 0.3s ease;
+            border-radius: 16px 16px 0 0;
+        }
+
+        @media (min-width: 640px) {
+            .modal-content {
+                max-width: 400px;
+                padding: 40px;
+                animation: modalSlideIn 0.3s ease;
+                border-radius: 0;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            padding-right: 40px;
+        }
+
+        .modal-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #2d2d2d;
+            margin-bottom: 8px;
+        }
+
+        @media (min-width: 640px) {
+            .modal-header h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.3s;
+            background: #f8fafd;
+        }
+
+        .close-modal:active {
+            color: #4a7bb3;
+            background: #f0f4fa;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #2d2d2d;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            border-radius: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4a7bb3;
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        @media (min-width: 480px) {
+            .modal-actions {
+                flex-direction: row;
+            }
+        }
+
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top-color: #4a7bb3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-color: #28a745;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #dc3545;
+        }
+
+        @media (max-width: 1023px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 2px 0 30px rgba(0,0,0,0.2);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .btn,
+            .nav-link,
+            .btn-editar {
+                cursor: default;
+            }
+            
+            input, select, textarea {
+                font-size: 16px !important;
+            }
+        }
+
+        @media (orientation: landscape) and (max-height: 600px) {
+            .sidebar {
+                padding: 16px 0;
+            }
+            
+            .user-info {
+                padding: 12px 20px;
+            }
+            
+            .nav-link {
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>SamaraAgenda</h2>
+                <p>Sistema de Gestão</p>
+            </div>
+            
+            <div class="user-info" onclick="window.location.href='perfil.html'">
+                <div class="user-details">
+                    <h4 id="sidebarNome">Carregando...</h4>
+                    <span id="sidebarEmail">carregando...</span>
+                </div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link" id="link-dashboard">
+                        <i class="bi bi-house-door"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pacientes.html" class="nav-link" id="link-pacientes">
+                        <i class="bi bi-people"></i>
+                        <span>Pacientes</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="agendamento.html" class="nav-link" id="link-agenda">
+                        <i class="bi bi-calendar-check"></i>
+                        <span>Agenda</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="registro-sessao.html" class="nav-link" id="link-registro">
+                        <i class="bi bi-file-text"></i>
+                        <span>Registro de Sessões</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="lembrete.html" class="nav-link" id="link-lembrete">
+                        <i class="bi bi-bell"></i>
+                        <span>Lembretes</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="perfil.html" class="nav-link active" id="link-perfil">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>Meu Perfil</h1>
+                    <p>Gerencie suas informações pessoais</p>
+                </div>
+                <div class="date-display" id="currentDate"></div>
+            </div>
+            
+            <div class="alert" id="alertMessage"></div>
+            
+            <div class="perfil-container">
+                <div class="perfil-card">
+                    <div class="perfil-header">
+                        <h2 id="perfilNome">Carregando...</h2>
+                        <p id="perfilTipo">Psicopedagogo(a)</p>
+                    </div>
+                    
+                    <div class="perfil-info">
+                        <div class="info-row">
+                            <div class="info-label">Nome completo</div>
+                            <div class="info-value" id="nomeContainer">
+                                <span id="nomeTexto">Carregando...</span>
+                                <button class="btn-editar" onclick="editarCampo('nome')">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="info-row">
+                            <div class="info-label">E-mail</div>
+                            <div class="info-value" id="emailContainer">
+                                <span id="emailTexto">carregando...</span>
+                                <button class="btn-editar" onclick="editarCampo('email')">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="info-row">
+                            <div class="info-label">Telefone</div>
+                            <div class="info-value" id="telefoneContainer">
+                                <span id="telefoneTexto">carregando...</span>
+                                <button class="btn-editar" onclick="editarCampo('telefone')">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="info-row">
+                            <div class="info-label">Membro desde</div>
+                            <div class="info-value" id="membroDesde">Carregando...</div>
+                        </div>
+                    </div>
+                    
+                    <div class="acoes-perfil">
+                        <button class="btn-primary" onclick="abrirModalSenha()">
+                            <i class="bi bi-lock"></i> Alterar Senha
+                        </button>
+                        <button class="btn-secondary" onclick="salvarAlteracoes()" id="btnSalvar" style="display: none;">
+                            <i class="bi bi-check-lg"></i> Salvar Alterações
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <button class="mobile-menu-btn" id="menuBtn" aria-label="Abrir menu">
+        <i class="bi bi-list"></i>
+    </button>
+    
+    <div class="modal" id="modalSenha">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModal('modalSenha')">&times;</span>
+            <div class="modal-header">
+                <h2>Alterar Senha</h2>
+            </div>
+            
+            <form id="formSenha" onsubmit="alterarSenha(event)">
+                <div class="form-group">
+                    <label>Senha Atual</label>
+                    <input type="password" id="senhaAtual" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Nova Senha</label>
+                    <input type="password" id="novaSenha" required minlength="6">
+                </div>
+                
+                <div class="form-group">
+                    <label>Confirmar Nova Senha</label>
+                    <input type="password" id="confirmarSenha" required minlength="6">
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="fecharModal('modalSenha')">Cancelar</button>
+                    <button type="submit" class="btn-primary">Alterar Senha</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+    
+    <script>
+        let usuarioAtual = null;
+        let camposEditando = {};
+        let valoresOriginais = {};
+
+        window.onload = async function() {
+            if (!verificarLogin()) return;
+            await carregarDadosUsuario();
+            atualizarData();
+            destacarLinkAtivo();
+            setupMobileMenu();
+            setupModalGestures();
+        };
+
+        function setupMobileMenu() {
+            const menuBtn = document.getElementById('menuBtn');
+            const sidebar = document.getElementById('sidebar');
+            
+            menuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.toggle('open');
+                this.innerHTML = sidebar.classList.contains('open') ? 
+                    '<i class="bi bi-x-lg"></i>' : '<i class="bi bi-list"></i>';
+            });
+            
+            document.addEventListener('click', function(event) {
+                if (sidebar.classList.contains('open') && 
+                    !sidebar.contains(event.target) && 
+                    !menuBtn.contains(event.target)) {
+                    sidebar.classList.remove('open');
+                    menuBtn.innerHTML = '<i class="bi bi-list"></i>';
+                }
+            });
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 1023) {
+                        sidebar.classList.remove('open');
+                        menuBtn.innerHTML = '<i class="bi bi-list"></i>';
+                    }
+                });
+            });
+        }
+
+        function setupModalGestures() {
+            if (window.innerWidth <= 639) {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    let startY = 0;
+                    
+                    modal.addEventListener('touchstart', (e) => {
+                        startY = e.touches[0].clientY;
+                    }, { passive: true });
+                    
+                    modal.addEventListener('touchmove', (e) => {
+                        if (!modal.classList.contains('active')) return;
+                        
+                        const currentY = e.touches[0].clientY;
+                        const diffY = currentY - startY;
+                        
+                        if (diffY > 50) {
+                            modal.classList.remove('active');
+                        }
+                    }, { passive: true });
+                });
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loading').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('active');
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.textContent = message;
+            alertDiv.className = 'alert show alert-' + type;
+            
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+            }, 3000);
+        }
+
+        function verificarLogin() {
+            const usuario = sessionStorage.getItem('usuario');
+            if (!usuario) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            usuarioAtual = JSON.parse(usuario);
+            return true;
+        }
+
+        async function carregarDadosUsuario() {
+            showLoading();
+            
+            try {
+                console.log('Carregando perfil do usuário:', usuarioAtual.id);
+                const response = await fetch(`/api/perfil/${usuarioAtual.id}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Dados recebidos:', data);
+                
+                usuarioAtual = data;
+                sessionStorage.setItem('usuario', JSON.stringify(data));
+                atualizarUI(data);
+                
+            } catch (error) {
+                console.error('Erro detalhado:', error);
+                showAlert('Erro ao carregar perfil: ' + error.message, 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function atualizarUI(usuario) {
+            document.getElementById('sidebarNome').textContent = usuario.nome;
+            document.getElementById('sidebarEmail').textContent = usuario.email;
+            
+            document.getElementById('perfilNome').textContent = usuario.nome;
+            document.getElementById('nomeTexto').textContent = usuario.nome;
+            document.getElementById('emailTexto').textContent = usuario.email;
+            document.getElementById('telefoneTexto').textContent = usuario.telefone || 'Não informado';
+            
+            if (usuario.createdAt) {
+                const data = new Date(usuario.createdAt);
+                document.getElementById('membroDesde').textContent = data.toLocaleDateString('pt-BR');
+            }
+        }
+
+        function atualizarData() {
+            const data = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = data.toLocaleDateString('pt-BR', options);
+        }
+
+        function editarCampo(campo) {
+            if (camposEditando[campo]) return;
+            
+            const span = document.getElementById(campo + 'Texto');
+            const valorAtual = span.textContent === 'Não informado' ? '' : span.textContent;
+            
+            valoresOriginais[campo] = span.textContent;
+            camposEditando[campo] = true;
+            
+            const container = document.getElementById(campo + 'Container');
+            container.innerHTML = `
+                <input type="${campo === 'email' ? 'email' : 'text'}" 
+                       id="${campo}Input" 
+                       value="${valorAtual}" 
+                       placeholder="Digite ${campo === 'email' ? 'o e-mail' : 'o ' + campo}"
+                       style="flex: 1; padding: 8px; border: 1px solid #ddd;">
+                <button class="btn-editar" onclick="salvarCampo('${campo}')">
+                    <i class="bi bi-check-lg"></i>
+                </button>
+                <button class="btn-editar" onclick="cancelarEdicao('${campo}')">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            `;
+            
+            document.getElementById('btnSalvar').style.display = 'flex';
+        }
+
+        function salvarCampo(campo) {
+            const input = document.getElementById(campo + 'Input');
+            const novoValor = input.value.trim() || valoresOriginais[campo];
+            
+            document.getElementById(campo + 'Texto').textContent = novoValor || 'Não informado';
+            
+            const container = document.getElementById(campo + 'Container');
+            container.innerHTML = `
+                <span id="${campo}Texto">${novoValor || 'Não informado'}</span>
+                <button class="btn-editar" onclick="editarCampo('${campo}')">
+                    <i class="bi bi-pencil"></i>
+                </button>
+            `;
+            
+            delete camposEditando[campo];
+            
+            if (Object.keys(camposEditando).length === 0) {
+                document.getElementById('btnSalvar').style.display = 'none';
+            }
+        }
+
+        function cancelarEdicao(campo) {
+            const valorOriginal = valoresOriginais[campo];
+            
+            const container = document.getElementById(campo + 'Container');
+            container.innerHTML = `
+                <span id="${campo}Texto">${valorOriginal}</span>
+                <button class="btn-editar" onclick="editarCampo('${campo}')">
+                    <i class="bi bi-pencil"></i>
+                </button>
+            `;
+            
+            delete camposEditando[campo];
+            
+            if (Object.keys(camposEditando).length === 0) {
+                document.getElementById('btnSalvar').style.display = 'none';
+            }
+        }
+
+        async function salvarAlteracoes() {
+            const nome = document.getElementById('nomeTexto').textContent;
+            const email = document.getElementById('emailTexto').textContent;
+            let telefone = document.getElementById('telefoneTexto').textContent;
+            
+            if (telefone === 'Não informado') {
+                telefone = '';
+            }
+            
+            showLoading();
+            
+            try {
+                const response = await fetch(`/api/perfil/${usuarioAtual.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nome, email, telefone })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    usuarioAtual = data.usuario;
+                    sessionStorage.setItem('usuario', JSON.stringify(data.usuario));
+                    
+                    document.getElementById('perfilNome').textContent = usuarioAtual.nome;
+                    
+                    showAlert('Perfil atualizado com sucesso!', 'success');
+                } else {
+                    showAlert(data.message || 'Erro ao atualizar perfil', 'error');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showAlert('Erro ao conectar com o servidor', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function abrirModalSenha() {
+            document.getElementById('formSenha').reset();
+            document.getElementById('modalSenha').classList.add('active');
+        }
+
+        function fecharModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        async function alterarSenha(event) {
+            event.preventDefault();
+            
+            const senhaAtual = document.getElementById('senhaAtual').value;
+            const novaSenha = document.getElementById('novaSenha').value;
+            const confirmarSenha = document.getElementById('confirmarSenha').value;
+            
+            if (novaSenha !== confirmarSenha) {
+                showAlert('As senhas não coincidem', 'error');
+                return;
+            }
+            
+            if (novaSenha.length < 6) {
+                showAlert('A nova senha deve ter no mínimo 6 caracteres', 'error');
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                const response = await fetch('/api/alterar-senha', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        usuario_id: usuarioAtual.id,
+                        senha_atual: senhaAtual,
+                        nova_senha: novaSenha
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('Senha alterada com sucesso!', 'success');
+                    fecharModal('modalSenha');
+                    document.getElementById('formSenha').reset();
+                } else {
+                    showAlert(data.message || 'Erro ao alterar senha', 'error');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showAlert('Erro ao conectar com o servidor', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('usuario');
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        function destacarLinkAtivo() {
+            const path = window.location.pathname.split('/').pop() || 'dashboard.html';
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            if (path.includes('dashboard')) {
+                document.getElementById('link-dashboard')?.classList.add('active');
+            } else if (path.includes('pacientes')) {
+                document.getElementById('link-pacientes')?.classList.add('active');
+            } else if (path.includes('agendamento')) {
+                document.getElementById('link-agenda')?.classList.add('active');
+            } else if (path.includes('registro-sessao')) {
+                document.getElementById('link-registro')?.classList.add('active');
+            } else if (path.includes('lembrete')) {
+                document.getElementById('link-lembrete')?.classList.add('active');
+            } else if (path.includes('perfil')) {
+                document.getElementById('link-perfil')?.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

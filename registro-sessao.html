@@ -1,0 +1,1939 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="SamaraAgenda">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4a7bb3">
+    <title>Registro de Sessão - SamaraAgenda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafd;
+            color: #2d2d2d;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.05);
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 24px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sidebar-header h2 {
+            font-family: 'Playfair Display', serif;
+            color: #4a7bb3;
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .user-info {
+            padding: 16px 20px;
+            background: #f8fafd;
+            margin: 16px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .user-info:hover {
+            background: #f0f4fa;
+        }
+
+        .user-details h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #2d2d2d;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-details span {
+            font-size: 0.8rem;
+            color: #666;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0 16px;
+        }
+
+        .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-link i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .nav-link:hover {
+            background: #f8fafd;
+            color: #4a7bb3;
+        }
+
+        .nav-link.active {
+            background: #4a7bb3;
+            color: white;
+        }
+
+        .nav-link span {
+            white-space: nowrap;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .top-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+            background: white;
+            padding: 16px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        @media (min-width: 640px) {
+            .top-bar {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px 30px;
+            }
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #2d2d2d;
+            line-height: 1.2;
+        }
+
+        @media (min-width: 640px) {
+            .page-title h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .page-title p {
+            color: #666;
+            margin-top: 4px;
+            font-size: 0.9rem;
+        }
+
+        .date-display {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #4a7bb3;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(74, 123, 179, 0.3);
+            z-index: 1001;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:active {
+            transform: scale(0.95);
+        }
+
+        .registro-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 1024px) {
+            .registro-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+        }
+
+        .form-card {
+            background: white;
+            padding: 20px;
+            border: 1px solid #eee;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+        }
+
+        @media (min-width: 640px) {
+            .form-card {
+                padding: 30px;
+            }
+        }
+
+        .form-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f4fa;
+        }
+
+        @media (min-width: 640px) {
+            .form-card h2 {
+                font-size: 1.5rem;
+                margin-bottom: 25px;
+                padding-bottom: 15px;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #2d2d2d;
+            font-size: 0.9rem;
+        }
+
+        .form-group select,
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            border-radius: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4a7bb3;
+            box-shadow: 0 0 0 3px rgba(74, 123, 179, 0.1);
+        }
+
+        .audio-recorder {
+            background: #f8fafd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px dashed #4a7bb3;
+            text-align: center;
+        }
+
+        @media (min-width: 480px) {
+            .audio-recorder {
+                padding: 25px;
+            }
+        }
+
+        .recorder-status {
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .recorder-status.recording {
+            color: #e74c3c;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .recorder-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        @media (min-width: 480px) {
+            .recorder-buttons {
+                flex-direction: row;
+            }
+        }
+
+        .btn-recorder {
+            padding: 12px 20px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        @media (min-width: 480px) {
+            .btn-recorder {
+                width: auto;
+                padding: 15px 30px;
+            }
+        }
+
+        .btn-recorder.start {
+            background: #4a7bb3;
+            color: white;
+        }
+
+        .btn-recorder.start:active {
+            background: #6f9bce;
+            transform: scale(0.98);
+        }
+
+        .btn-recorder.stop {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-recorder.stop:active {
+            background: #c0392b;
+            transform: scale(0.98);
+        }
+
+        .btn-recorder:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .upload-area {
+            margin-top: 16px;
+            padding: 16px;
+            background: #f8fafd;
+            border: 2px dashed #4a7bb3;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:active {
+            background: #f0f4fa;
+        }
+
+        .upload-area i {
+            font-size: 1.5rem;
+            color: #4a7bb3;
+            margin-bottom: 8px;
+        }
+
+        .upload-area p {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .audio-list {
+            margin-top: 16px;
+            text-align: left;
+        }
+
+        .audio-item {
+            background: white;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 3px solid #4a7bb3;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        @media (min-width: 480px) {
+            .audio-item {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .audio-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .audio-info i {
+            color: #4a7bb3;
+            font-size: 1.2rem;
+        }
+
+        .audio-details strong {
+            font-size: 0.9rem;
+            word-break: break-word;
+        }
+
+        .audio-details small {
+            color: #666;
+            display: block;
+            font-size: 0.75rem;
+        }
+
+        .audio-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .btn-audio {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #eee;
+            background: white;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-audio:active {
+            background: #4a7bb3;
+            color: white;
+            border-color: #4a7bb3;
+        }
+
+        .evolucao-scale {
+            margin: 20px 0;
+        }
+
+        .scale-item {
+            margin-bottom: 16px;
+        }
+
+        .scale-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .scale-bar {
+            height: 40px;
+            background: #f0f4fa;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .scale-fill {
+            height: 100%;
+            background: #4a7bb3;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .btn-primary {
+            background: #4a7bb3;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        .btn-primary:active {
+            background: #6f9bce;
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #4a7bb3;
+            border: 2px solid #4a7bb3;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        @media (min-width: 480px) {
+            .btn-secondary {
+                width: auto;
+                padding: 12px 25px;
+            }
+        }
+
+        .btn-secondary:active {
+            background: #4a7bb3;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        @media (min-width: 480px) {
+            .btn-danger {
+                width: auto;
+                padding: 12px 25px;
+            }
+        }
+
+        .btn-danger:active {
+            background: #c0392b;
+            transform: scale(0.98);
+        }
+
+        .registros-list {
+            background: white;
+            padding: 20px;
+            border: 1px solid #eee;
+        }
+
+        @media (min-width: 640px) {
+            .registros-list {
+                padding: 30px;
+            }
+        }
+
+        .registros-list h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f4fa;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        @media (min-width: 480px) {
+            .registros-list h2 {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 1.5rem;
+                margin-bottom: 25px;
+                padding-bottom: 15px;
+            }
+        }
+
+        .registro-item {
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #eee;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .registro-item:active {
+            border-color: #4a7bb3;
+            box-shadow: 0 5px 15px rgba(74, 123, 179, 0.1);
+        }
+
+        .registro-header {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding-right: 40px;
+        }
+
+        @media (min-width: 380px) {
+            .registro-header {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+
+        .registro-paciente {
+            font-weight: 600;
+            color: #2d2d2d;
+        }
+
+        .registro-data {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .registro-observacoes {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            padding-right: 40px;
+        }
+
+        .evolucao-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .evolucao-tag {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .evolucao-tag strong {
+            color: #4a7bb3;
+        }
+
+        .delete-registro-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 35px;
+            height: 35px;
+            border: 1px solid #eee;
+            background: white;
+            color: #dc3545;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .delete-registro-btn:active {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 0;
+        }
+
+        @media (min-width: 640px) {
+            .modal {
+                align-items: center;
+                padding: 20px;
+            }
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            position: relative;
+            animation: slideUp 0.3s ease;
+            border-radius: 16px 16px 0 0;
+        }
+
+        @media (min-width: 640px) {
+            .modal-content {
+                max-width: 600px;
+                padding: 40px;
+                animation: modalSlideIn 0.3s ease;
+                border-radius: 0;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            padding-right: 40px;
+        }
+
+        .modal-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #2d2d2d;
+            margin-bottom: 8px;
+        }
+
+        @media (min-width: 640px) {
+            .modal-header h2 {
+                font-size: 2rem;
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.3s;
+            background: #f8fafd;
+        }
+
+        .close-modal:active {
+            color: #4a7bb3;
+            background: #f0f4fa;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        @media (min-width: 480px) {
+            .info-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+            }
+        }
+
+        .info-card {
+            background: #f8fafd;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+
+        .info-card .label {
+            font-size: 0.75rem;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .info-card .value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #4a7bb3;
+        }
+
+        .observacoes-box {
+            background: #f8fafd;
+            padding: 16px;
+            border-left: 4px solid #4a7bb3;
+            margin: 20px 0;
+        }
+
+        .observacoes-box .label {
+            font-weight: 600;
+            color: #2d2d2d;
+            margin-bottom: 8px;
+        }
+
+        .observacoes-box .texto {
+            color: #555;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .audios-section {
+            margin-top: 20px;
+        }
+
+        .audios-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+        }
+
+        .audio-player-item {
+            background: #f8fafd;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #eee;
+        }
+
+        .audio-player-item audio {
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .audio-player-header {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        @media (min-width: 480px) {
+            .audio-player-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .audio-name {
+            font-weight: 500;
+            color: #2d2d2d;
+            font-size: 0.9rem;
+            word-break: break-word;
+        }
+
+        .audio-date {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 2px solid #f0f4fa;
+        }
+
+        @media (min-width: 480px) {
+            .modal-actions {
+                flex-direction: row;
+            }
+        }
+
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top-color: #4a7bb3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            color: #ddd;
+            margin-bottom: 12px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-color: #28a745;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #dc3545;
+        }
+
+        @media (max-width: 1023px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 2px 0 30px rgba(0,0,0,0.2);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .btn,
+            .nav-link,
+            .registro-item,
+            .btn-recorder,
+            .upload-area,
+            .btn-audio {
+                cursor: default;
+            }
+            
+            input, select, textarea {
+                font-size: 16px !important;
+            }
+        }
+
+        @media (orientation: landscape) and (max-height: 600px) {
+            .sidebar {
+                padding: 16px 0;
+            }
+            
+            .user-info {
+                padding: 12px 20px;
+            }
+            
+            .nav-link {
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>SamaraAgenda</h2>
+                <p>Sistema de Gestão</p>
+            </div>
+            
+            <div class="user-info" onclick="window.location.href='perfil.html'">
+                <div class="user-details">
+                    <h4 id="sidebarNome">Carregando...</h4>
+                    <span id="sidebarEmail">carregando...</span>
+                </div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link" id="link-dashboard">
+                        <i class="bi bi-house-door"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pacientes.html" class="nav-link" id="link-pacientes">
+                        <i class="bi bi-people"></i>
+                        <span>Pacientes</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="agendamento.html" class="nav-link" id="link-agenda">
+                        <i class="bi bi-calendar-check"></i>
+                        <span>Agenda</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="registro-sessao.html" class="nav-link active" id="link-registro">
+                        <i class="bi bi-file-text"></i>
+                        <span>Registro de Sessões</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="lembrete.html" class="nav-link" id="link-lembrete">
+                        <i class="bi bi-bell"></i>
+                        <span>Lembretes</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="perfil.html" class="nav-link" id="link-perfil">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>Registro de Sessões</h1>
+                    <p id="welcomeMessage">Registre e acompanhe a evolução dos pacientes</p>
+                </div>
+                <div class="date-display" id="currentDate"></div>
+            </div>
+            
+            <div class="alert" id="alertMessage"></div>
+            
+            <div class="registro-container">
+                <div class="form-card">
+                    <h2>Nova Sessão</h2>
+                    
+                    <form id="formRegistro" onsubmit="salvarRegistro(event)">
+                        <div class="form-group">
+                            <label>Paciente *</label>
+                            <select id="pacienteSelect" required>
+                                <option value="">Carregando pacientes...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Data da Sessão *</label>
+                            <input type="date" id="dataSessao" required>
+                        </div>
+                        
+                        <div class="audio-recorder">
+                            <div class="recorder-status" id="recorderStatus">
+                                <i class="bi bi-mic"></i> Gravador disponível
+                            </div>
+                            
+                            <div class="recorder-buttons">
+                                <button type="button" class="btn-recorder start" id="startRecord" onclick="iniciarGravacao()">
+                                    <i class="bi bi-record-circle"></i> Iniciar Gravação
+                                </button>
+                                <button type="button" class="btn-recorder stop" id="stopRecord" onclick="pararGravacao()" disabled>
+                                    <i class="bi bi-stop-circle"></i> Parar Gravação
+                                </button>
+                            </div>
+                            
+                            <div class="upload-area" onclick="uploadAudio()">
+                                <i class="bi bi-cloud-arrow-up"></i>
+                                <p>Clique para fazer upload de um áudio</p>
+                                <input type="file" id="audioUpload" accept="audio/*" style="display: none;" onchange="handleAudioUpload(event)">
+                            </div>
+                            
+                            <div class="audio-list" id="audioList"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Observações da Sessão</label>
+                            <textarea id="observacoes" rows="4" placeholder="Registre aqui as observações sobre a sessão..."></textarea>
+                        </div>
+                        
+                        <div class="evolucao-scale">
+                            <h3 style="margin-bottom: 15px; font-size: 1.1rem;">Evolução do Paciente</h3>
+                            
+                            <div class="scale-item">
+                                <div class="scale-header">
+                                    <span>Participação</span>
+                                    <span id="participacaoValor">5</span>
+                                </div>
+                                <div class="scale-bar" onclick="definirValor(event, 'participacao')">
+                                    <div class="scale-fill" id="participacaoFill" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="scale-item">
+                                <div class="scale-header">
+                                    <span>Compreensão</span>
+                                    <span id="compreensaoValor">5</span>
+                                </div>
+                                <div class="scale-bar" onclick="definirValor(event, 'compreensao')">
+                                    <div class="scale-fill" id="compreensaoFill" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="scale-item">
+                                <div class="scale-header">
+                                    <span>Progresso</span>
+                                    <span id="progressoValor">5</span>
+                                </div>
+                                <div class="scale-bar" onclick="definirValor(event, 'progresso')">
+                                    <div class="scale-fill" id="progressoFill" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">
+                            <i class="bi bi-check-lg"></i> Salvar Registro
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="registros-list">
+                    <h2>
+                        Registros Recentes
+                        <span style="font-size: 0.9rem; color: #666;" id="totalRegistros">Total: 0</span>
+                    </h2>
+                    <div id="registrosRecentes">
+                        <div class="empty-state">
+                            <i class="bi bi-file-text"></i>
+                            <p>Nenhum registro encontrado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <button class="mobile-menu-btn" id="menuBtn" aria-label="Abrir menu">
+        <i class="bi bi-list"></i>
+    </button>
+    
+    <div class="modal" id="modalVisualizarRegistro">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModalRegistro()">&times;</span>
+            
+            <div class="modal-header">
+                <h2 id="modalPacienteNome">Carregando...</h2>
+                <div class="registro-data" id="modalDataSessao">Carregando...</div>
+            </div>
+            
+            <div class="modal-body">
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="label">Participação</div>
+                        <div class="value" id="modalParticipacao">0/10</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">Compreensão</div>
+                        <div class="value" id="modalCompreensao">0/10</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">Progresso</div>
+                        <div class="value" id="modalProgresso">0/10</div>
+                    </div>
+                </div>
+                
+                <div class="observacoes-box">
+                    <div class="label">Observações da Sessão</div>
+                    <div class="texto" id="modalObservacoes">Sem observações</div>
+                </div>
+                
+                <div class="audios-section">
+                    <h3>Áudios da Sessão</h3>
+                    <div id="modalAudiosList">
+                        <p class="empty-state" style="padding: 20px;">
+                            <i class="bi bi-mic-mute"></i>
+                            Nenhum áudio gravado para esta sessão
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-danger" onclick="confirmarExclusaoRegistro()">
+                    <i class="bi bi-trash"></i> Excluir Registro
+                </button>
+                <button class="btn-secondary" onclick="fecharModalRegistro()">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="modalConfirmarExclusao">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModal('modalConfirmarExclusao')">&times;</span>
+            
+            <div class="modal-header">
+                <h2>Confirmar Exclusão</h2>
+                <p>Esta ação não pode ser desfeita</p>
+            </div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <i class="bi bi-exclamation-triangle" style="font-size: 3rem; color: #dc3545;"></i>
+                <p style="margin-top: 16px; color: #666;" id="excluirMensagem">
+                    Tem certeza que deseja excluir este registro?
+                </p>
+                <p style="color: #999; font-size: 0.85rem;" id="excluirInfo">
+                    Todos os áudios associados também serão removidos.
+                </p>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="fecharModal('modalConfirmarExclusao')">Cancelar</button>
+                <button class="btn-danger" onclick="excluirRegistro()">Sim, Excluir</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+    
+    <script>
+        let usuarioAtual = null;
+        let mediaRecorder;
+        let audioChunks = [];
+        let audiosGravados = [];
+        let pacientes = [];
+        let registros = [];
+        let registroSelecionado = null;
+
+        window.onload = async function() {
+            if (!verificarLogin()) return;
+            await carregarDadosUsuario();
+            await carregarPacientes();
+            await carregarRegistros();
+            atualizarData();
+            document.getElementById('dataSessao').valueAsDate = new Date();
+            setupMobileMenu();
+            setupModalGestures();
+        };
+
+        function setupMobileMenu() {
+            const menuBtn = document.getElementById('menuBtn');
+            const sidebar = document.getElementById('sidebar');
+            
+            menuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.toggle('open');
+                this.innerHTML = sidebar.classList.contains('open') ? 
+                    '<i class="bi bi-x-lg"></i>' : '<i class="bi bi-list"></i>';
+            });
+            
+            document.addEventListener('click', function(event) {
+                if (sidebar.classList.contains('open') && 
+                    !sidebar.contains(event.target) && 
+                    !menuBtn.contains(event.target)) {
+                    sidebar.classList.remove('open');
+                    menuBtn.innerHTML = '<i class="bi bi-list"></i>';
+                }
+            });
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 1023) {
+                        sidebar.classList.remove('open');
+                        menuBtn.innerHTML = '<i class="bi bi-list"></i>';
+                    }
+                });
+            });
+        }
+
+        function setupModalGestures() {
+            if (window.innerWidth <= 639) {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    let startY = 0;
+                    
+                    modal.addEventListener('touchstart', (e) => {
+                        startY = e.touches[0].clientY;
+                    }, { passive: true });
+                    
+                    modal.addEventListener('touchmove', (e) => {
+                        if (!modal.classList.contains('active')) return;
+                        
+                        const currentY = e.touches[0].clientY;
+                        const diffY = currentY - startY;
+                        
+                        if (diffY > 50) {
+                            modal.classList.remove('active');
+                        }
+                    }, { passive: true });
+                });
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loading').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('active');
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.textContent = message;
+            alertDiv.className = 'alert show alert-' + type;
+            
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+            }, 3000);
+        }
+
+        function verificarLogin() {
+            const usuario = sessionStorage.getItem('usuario');
+            if (!usuario) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            usuarioAtual = JSON.parse(usuario);
+            return true;
+        }
+
+        async function carregarDadosUsuario() {
+            try {
+                const response = await fetch(`/api/perfil/${usuarioAtual.id}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    usuarioAtual = data;
+                    sessionStorage.setItem('usuario', JSON.stringify(data));
+                    atualizarSidebar();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados do usuário:', error);
+            }
+        }
+
+        function atualizarSidebar() {
+            document.getElementById('sidebarNome').textContent = usuarioAtual.nome;
+            document.getElementById('sidebarEmail').textContent = usuarioAtual.email;
+        }
+        
+        function atualizarData() {
+            const data = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = data.toLocaleDateString('pt-BR', options);
+        }
+
+        async function carregarPacientes() {
+            try {
+                const response = await fetch(`/api/pacientes?usuario_id=${usuarioAtual.id}`);
+                pacientes = await response.json();
+                
+                const select = document.getElementById('pacienteSelect');
+                select.innerHTML = '<option value="">Selecione um paciente</option>';
+                
+                pacientes.forEach(p => {
+                    const option = document.createElement('option');
+                    option.value = p.id;
+                    option.textContent = p.nome;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar pacientes:', error);
+                showAlert('Erro ao carregar pacientes', 'error');
+            }
+        }
+
+        async function carregarRegistros() {
+            try {
+                const response = await fetch(`/api/registros?usuario_id=${usuarioAtual.id}`);
+                registros = await response.json();
+                renderizarRegistros();
+            } catch (error) {
+                console.error('Erro ao carregar registros:', error);
+            }
+        }
+
+        function formatarData(dataString) {
+            if (!dataString) return null;
+            
+            try {
+                const partes = dataString.split('-');
+                if (partes.length === 3) {
+                    const ano = parseInt(partes[0]);
+                    const mes = parseInt(partes[1]) - 1;
+                    const dia = parseInt(partes[2]);
+                    
+                    const data = new Date(ano, mes, dia);
+                    if (!isNaN(data.getTime())) {
+                        return data;
+                    }
+                }
+            } catch (e) {
+                console.error('Erro ao parsear data:', e);
+            }
+            return null;
+        }
+
+        function renderizarRegistros() {
+            const container = document.getElementById('registrosRecentes');
+            document.getElementById('totalRegistros').textContent = `Total: ${registros.length}`;
+            
+            if (registros.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-file-text"></i>
+                        <p>Nenhum registro encontrado</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const recentes = registros.slice(-5).reverse();
+            container.innerHTML = '';
+            
+            recentes.forEach(reg => {
+                let dataStr = 'Data inválida';
+                const dataObj = formatarData(reg.data_sessao);
+                if (dataObj) {
+                    dataStr = dataObj.toLocaleDateString('pt-BR');
+                }
+                
+                const item = document.createElement('div');
+                item.className = 'registro-item';
+                item.onclick = () => visualizarRegistro(reg.id);
+                item.innerHTML = `
+                    <div class="registro-header">
+                        <span class="registro-paciente">${reg.paciente_nome || 'Paciente'}</span>
+                        <span class="registro-data">${dataStr}</span>
+                    </div>
+                    <div class="registro-observacoes">${reg.observacoes || 'Sem observações'}</div>
+                    <div class="evolucao-tags">
+                        <span class="evolucao-tag"><strong>Participação:</strong> ${reg.participacao}/10</span>
+                        <span class="evolucao-tag"><strong>Compreensão:</strong> ${reg.compreensao}/10</span>
+                        <span class="evolucao-tag"><strong>Progresso:</strong> ${reg.progresso}/10</span>
+                    </div>
+                    <button class="delete-registro-btn" onclick="event.stopPropagation(); confirmarExclusaoRegistro('${reg.id}')">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                `;
+                container.appendChild(item);
+            });
+        }
+        
+        async function iniciarGravacao() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const audioName = `audio_${Date.now()}.wav`;
+                    
+                    audiosGravados.push({
+                        nome: audioName,
+                        url: audioUrl,
+                        blob: audioBlob,
+                        data: new Date().toLocaleString()
+                    });
+                    
+                    adicionarAudioNaLista(audioName, audioUrl);
+                };
+                
+                mediaRecorder.start();
+                
+                document.getElementById('recorderStatus').innerHTML = '<i class="bi bi-record-circle"></i> Gravando...';
+                document.getElementById('recorderStatus').classList.add('recording');
+                document.getElementById('startRecord').disabled = true;
+                document.getElementById('stopRecord').disabled = false;
+                
+            } catch (err) {
+                showAlert('Erro ao acessar o microfone. Verifique as permissões.', 'error');
+                console.error(err);
+            }
+        }
+        
+        function pararGravacao() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                
+                document.getElementById('recorderStatus').innerHTML = '<i class="bi bi-mic"></i> Gravador disponível';
+                document.getElementById('recorderStatus').classList.remove('recording');
+                document.getElementById('startRecord').disabled = false;
+                document.getElementById('stopRecord').disabled = true;
+            }
+        }
+        
+        function uploadAudio() {
+            document.getElementById('audioUpload').click();
+        }
+        
+        function handleAudioUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const audioUrl = URL.createObjectURL(file);
+            const audioName = file.name;
+            
+            audiosGravados.push({
+                nome: audioName,
+                url: audioUrl,
+                blob: file,
+                data: new Date().toLocaleString()
+            });
+            
+            adicionarAudioNaLista(audioName, audioUrl);
+        }
+        
+        function adicionarAudioNaLista(nome, url) {
+            const audioList = document.getElementById('audioList');
+            const audioItem = document.createElement('div');
+            audioItem.className = 'audio-item';
+            audioItem.innerHTML = `
+                <div class="audio-info">
+                    <i class="bi bi-file-earmark-music"></i>
+                    <div class="audio-details">
+                        <strong>${nome}</strong>
+                        <small>${new Date().toLocaleString()}</small>
+                    </div>
+                </div>
+                <div class="audio-actions">
+                    <button class="btn-audio" onclick="ouvirAudio('${url}')" title="Ouvir">
+                        <i class="bi bi-play-circle"></i>
+                    </button>
+                    <button class="btn-audio" onclick="removerAudio(this)" title="Remover">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            `;
+            audioList.appendChild(audioItem);
+        }
+        
+        function ouvirAudio(url) {
+            const audio = new Audio(url);
+            audio.play();
+        }
+        
+        function removerAudio(btn) {
+            const audioItem = btn.closest('.audio-item');
+            const audioNome = audioItem.querySelector('strong').textContent;
+            audiosGravados = audiosGravados.filter(a => a.nome !== audioNome);
+            audioItem.remove();
+        }
+        
+        function definirValor(event, tipo) {
+            const barra = event.currentTarget;
+            const rect = barra.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const porcentagem = (x / rect.width) * 100;
+            const valor = Math.round(porcentagem / 10);
+            
+            const valorArredondado = Math.min(10, Math.max(0, valor));
+            const porcentagemArredondada = valorArredondado * 10;
+            
+            document.getElementById(tipo + 'Fill').style.width = porcentagemArredondada + '%';
+            document.getElementById(tipo + 'Valor').textContent = valorArredondado;
+        }
+        
+        async function salvarRegistro(event) {
+            event.preventDefault();
+            
+            const paciente_id = document.getElementById('pacienteSelect').value;
+            const data = document.getElementById('dataSessao').value;
+            const observacoes = document.getElementById('observacoes').value;
+            const participacao = parseInt(document.getElementById('participacaoValor').textContent);
+            const compreensao = parseInt(document.getElementById('compreensaoValor').textContent);
+            const progresso = parseInt(document.getElementById('progressoValor').textContent);
+            
+            if (!paciente_id || !data) {
+                showAlert('Por favor, selecione um paciente e a data da sessão', 'error');
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                const consultaResponse = await fetch(`/api/consultas?usuario_id=${usuarioAtual.id}&paciente_id=${paciente_id}&data=${data}`);
+                const consultas = await consultaResponse.json();
+                let consulta_id = null;
+                
+                if (consultas && consultas.length > 0) {
+                    consulta_id = consultas[0].id;
+                }
+                
+                const dadosRegistro = {
+                    usuario_id: usuarioAtual.id,
+                    paciente_id: paciente_id,
+                    consulta_id: consulta_id,
+                    data_sessao: data,
+                    observacoes: observacoes || '',
+                    participacao: participacao,
+                    compreensao: compreensao,
+                    progresso: progresso
+                };
+                
+                const response = await fetch('/api/registros', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dadosRegistro)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    showAlert('Registro salvo com sucesso!', 'success');
+                    
+                    if (audiosGravados.length > 0 && result.id) {
+                        await salvarAudios(result.id, paciente_id);
+                    }
+                    
+                    document.getElementById('formRegistro').reset();
+                    document.getElementById('dataSessao').valueAsDate = new Date();
+                    document.getElementById('audioList').innerHTML = '';
+                    audiosGravados = [];
+                    
+                    document.getElementById('participacaoFill').style.width = '50%';
+                    document.getElementById('compreensaoFill').style.width = '50%';
+                    document.getElementById('progressoFill').style.width = '50%';
+                    document.getElementById('participacaoValor').textContent = '5';
+                    document.getElementById('compreensaoValor').textContent = '5';
+                    document.getElementById('progressoValor').textContent = '5';
+                    
+                    await carregarRegistros();
+                } else {
+                    showAlert(result.message || result.error || 'Erro ao salvar registro', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Erro detalhado:', error);
+                showAlert('Erro ao conectar com o servidor: ' + error.message, 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        async function salvarAudios(registro_id, paciente_id) {
+            for (let i = 0; i < audiosGravados.length; i++) {
+                const audio = audiosGravados[i];
+                
+                try {
+                    const formData = new FormData();
+                    formData.append('audio', audio.blob, audio.nome);
+                    formData.append('usuario_id', usuarioAtual.id);
+                    formData.append('registro_id', registro_id);
+                    formData.append('paciente_id', paciente_id);
+                    
+                    await fetch('/api/audios/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                } catch (error) {
+                    console.error('Erro no áudio:', error);
+                }
+            }
+        }
+        
+        async function visualizarRegistro(id) {
+            showLoading();
+            
+            try {
+                const registro = registros.find(r => String(r.id) === String(id));
+                if (!registro) {
+                    showAlert('Registro não encontrado', 'error');
+                    return;
+                }
+                
+                registroSelecionado = registro;
+                
+                document.getElementById('modalPacienteNome').textContent = registro.paciente_nome || 'Paciente';
+                
+                let dataFormatada = 'Data inválida';
+                const dataObj = formatarData(registro.data_sessao);
+                if (dataObj) {
+                    dataFormatada = dataObj.toLocaleDateString('pt-BR', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                }
+                document.getElementById('modalDataSessao').textContent = dataFormatada;
+                
+                document.getElementById('modalParticipacao').textContent = (registro.participacao || 0) + '/10';
+                document.getElementById('modalCompreensao').textContent = (registro.compreensao || 0) + '/10';
+                document.getElementById('modalProgresso').textContent = (registro.progresso || 0) + '/10';
+                document.getElementById('modalObservacoes').textContent = registro.observacoes || 'Sem observações';
+                
+                try {
+                    const audiosResponse = await fetch(`/api/audios/registro/${id}?usuario_id=${usuarioAtual.id}`);
+                    
+                    if (!audiosResponse.ok) {
+                        throw new Error(`Erro HTTP: ${audiosResponse.status}`);
+                    }
+                    
+                    const audios = await audiosResponse.json();
+                    
+                    const audiosList = document.getElementById('modalAudiosList');
+                    
+                    if (audios && audios.length > 0) {
+                        audiosList.innerHTML = '';
+                        audios.forEach(audio => {
+                            const audioUrl = `/uploads/audios/${audio.nome_arquivo}`;
+                            let dataAudio = 'Data desconhecida';
+                            try {
+                                if (audio.created_at) {
+                                    dataAudio = new Date(audio.created_at).toLocaleString('pt-BR');
+                                }
+                            } catch (e) {
+                                console.error('Erro ao formatar data do áudio:', e);
+                            }
+                            
+                            const audioItem = document.createElement('div');
+                            audioItem.className = 'audio-player-item';
+                            audioItem.innerHTML = `
+                                <div class="audio-player-header">
+                                    <span class="audio-name">
+                                        <i class="bi bi-file-earmark-music"></i> ${audio.nome_arquivo}
+                                    </span>
+                                    <span class="audio-date">${dataAudio}</span>
+                                </div>
+                                <audio controls src="${audioUrl}"></audio>
+                            `;
+                            audiosList.appendChild(audioItem);
+                        });
+                    } else {
+                        audiosList.innerHTML = `
+                            <p class="empty-state" style="padding: 20px;">
+                                <i class="bi bi-mic-mute"></i>
+                                Nenhum áudio gravado para esta sessão
+                            </p>
+                        `;
+                    }
+                } catch (audioError) {
+                    console.error('Erro ao carregar áudios:', audioError);
+                    document.getElementById('modalAudiosList').innerHTML = `
+                        <p class="empty-state" style="padding: 20px; color: #dc3545;">
+                            <i class="bi bi-exclamation-circle"></i>
+                            Erro ao carregar áudios
+                        </p>
+                    `;
+                }
+                
+                document.getElementById('modalVisualizarRegistro').classList.add('active');
+                
+            } catch (error) {
+                console.error('Erro ao carregar detalhes:', error);
+                showAlert('Erro ao carregar detalhes do registro: ' + error.message, 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        function fecharModalRegistro() {
+            document.getElementById('modalVisualizarRegistro').classList.remove('active');
+        }
+        
+        function confirmarExclusaoRegistro(id) {
+            const registro = registros.find(r => String(r.id) === String(id));
+            if (!registro) {
+                showAlert('Registro não encontrado', 'error');
+                return;
+            }
+            
+            registroSelecionado = registro;
+            
+            let dataFormatada = 'data desconhecida';
+            const dataObj = formatarData(registro.data_sessao);
+            if (dataObj) {
+                dataFormatada = dataObj.toLocaleDateString('pt-BR');
+            }
+            
+            document.getElementById('excluirMensagem').innerHTML = `
+                Tem certeza que deseja excluir o registro de <strong>${registro.paciente_nome || 'paciente'}</strong>?
+            `;
+            document.getElementById('excluirInfo').innerHTML = `
+                Data: ${dataFormatada}<br>
+                Todos os áudios associados também serão removidos.
+            `;
+            
+            document.getElementById('modalConfirmarExclusao').classList.add('active');
+        }
+        
+        async function excluirRegistro() {
+            if (!registroSelecionado) {
+                showAlert('Nenhum registro selecionado', 'error');
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                const response = await fetch(`/api/registros/${registroSelecionado.id}?usuario_id=${usuarioAtual.id}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    showAlert('Registro excluído com sucesso!', 'success');
+                    fecharModal('modalConfirmarExclusao');
+                    await carregarRegistros();
+                } else {
+                    showAlert(result.message || 'Erro ao excluir registro', 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao excluir:', error);
+                showAlert('Erro ao conectar com o servidor: ' + error.message, 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        function fecharModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+        
+        function logout() {
+            sessionStorage.removeItem('usuario');
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        function destacarLinkAtivo() {
+            const path = window.location.pathname.split('/').pop() || 'dashboard.html';
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            if (path.includes('dashboard')) {
+                document.getElementById('link-dashboard')?.classList.add('active');
+            } else if (path.includes('pacientes')) {
+                document.getElementById('link-pacientes')?.classList.add('active');
+            } else if (path.includes('agendamento')) {
+                document.getElementById('link-agenda')?.classList.add('active');
+            } else if (path.includes('registro-sessao')) {
+                document.getElementById('link-registro')?.classList.add('active');
+            } else if (path.includes('lembrete')) {
+                document.getElementById('link-lembrete')?.classList.add('active');
+            } else if (path.includes('perfil')) {
+                document.getElementById('link-perfil')?.classList.add('active');
+            }
+        }
+
+        window.addEventListener('load', destacarLinkAtivo);
+    </script>
+</body>
+</html>
